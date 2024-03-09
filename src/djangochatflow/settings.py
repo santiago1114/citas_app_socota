@@ -140,9 +140,6 @@ JAZZMIN_SETTINGS = {
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels.layers.InMemoryChannelLayer",  # Use appropriate backend
-        'CONFIG': {
-            'hosts': [('wss://esesocota.benitech.cloud/ws/',)],
-        },
     },
 }
 
