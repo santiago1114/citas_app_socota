@@ -27,7 +27,7 @@ DEBUG = config('DEBUG', default=False, cast=bool)
 
 if DEBUG:
     ALLOWED_HOSTS = ['*']
-    CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000', 'https://esesocota.benitech.cloud']
+    CSRF_TRUSTED_ORIGINS = ['http://localhost:8000', 'http://127.0.0.1:8000', 'http://159.54.133.170/', 'https://esesocota.benitech.cloud']
 else:
     ALLOWED_HOSTS = ['https://esesocota.benitech.cloud']
     CSRF_TRUSTED_ORIGINS = ['https://esesocota.benitech.cloud']
