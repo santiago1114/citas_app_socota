@@ -7,6 +7,12 @@ WORKDIR /app
 # Install git for install dependencies from pip
 RUN apk update && apk upgrade
 
+# Install build dependencies
+RUN apk add --no-cache \
+    gcc \
+    musl-dev \
+    libffi-dev
+
 # set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
