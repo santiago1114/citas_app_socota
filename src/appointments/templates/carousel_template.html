@@ -1,0 +1,19 @@
+<!-- carousel_template.html -->
+<div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+    <div class="carousel-inner">
+        {% for media_item in media_items %}
+            {% if media_item.is_video %}
+                <div class="carousel-item">
+                    <video controls>
+                        <source src="{{ media_item.file.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+            {% else %}
+                <div class="carousel-item">
+                    <img src="{{ media_item.file.url }}" class="d-block w-100" alt="{{ media_item.title }}">
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>

@@ -1,0 +1,37 @@
+version: "3.8"
+
+services:
+  web:
+    build: .
+    volumes:
+      - db:/app/db
+      - media:/app/media
+      - static:/app/static
+    env_file:
+      - ./src/.env
+    networks:
+      - net
+    restart: unless-stopped
+
+  nginx:
+    build:
+      context: ./webserver
+    volumes:
+      - media:/media
+      - static:/static
+    ports:
+      - "8000:80"
+    networks:
+      - net
+    restart: unless-stopped
+    depends_on:
+      - web
+
+volumes:
+  media:
+  static:
+  db:
+
+networks:
+  net:
+    driver: bridge

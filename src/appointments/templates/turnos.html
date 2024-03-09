@@ -1,0 +1,181 @@
+<!-- turnos.html -->
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Turnos Digitales</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "vendor/fontawesome-free/css/all.min.css" %}">
+    <link rel="stylesheet" href="{% static "vendor/adminlte/css/adminlte.min.css" %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+    <style>
+        #turnosContainer {
+            overflow-x: hidden; /* Hide horizontal scrollbar */
+            overflow-y: auto; /* Add vertical scrollbar */
+            /* Añade scroll si el contenido excede la altura de la pantalla */
+            max-height: 100vh;
+            /* Resta el tamaño del encabezado (60px) para evitar desbordamiento */
+        }
+
+        .fit {
+            width: auto;
+            height: 100vh;
+            object-fit: contain;
+        }
+
+        .logo {
+            position: absolute; /* Position the logo absolutely */
+            bottom: 20px; /* Adjust as needed to position the logo */
+            right: 20px; /* Adjust as needed to position the logo */
+            z-index: 999; /* Ensure the logo stays on top of other content */
+        }
+    </style>
+</head>
+
+<body>
+    <audio id="notificationSound" src="{% static "sounds/tono.mp3" %}"></audio>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6 bg-light">
+                <div id="mediaCarousel" class="carousel slide" >
+                    <div class="carousel-inner">
+                        {% for media_item in media_items %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                {% if media_item.is_video %}
+                                    <video class="fit d-block w-100" controls autoplay loop muted>
+                                        <source src="{{ media_item.file.url }}" type="video/mp4">
+                                        Tu navegador no soporta la visualización de videos
+                                    </video>
+                                {% else %}
+                                    <img src="{{ media_item.file.url }}" class="fit d-block w-100" alt="{{ media_item.title }}">
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6 bg-teal" id="turnosContainer">
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static "admin/js/vendor/jquery/jquery.js" %}"></script>
+    <script src="{% static "vendor/bootstrap/js/bootstrap.min.js" %}"></script>
+
+    <script>
+        const URL = `ws://${window.location.host}/ws/turnos/`
+        const turnosList = [];
+
+        // Conectar al WebSocket
+        const websocket = new WebSocket(URL);
+
+        // Función para agregar un nuevo turno a la lista
+        function agregarTurno(turno) {
+            const { nombres, apellidos } = turno;
+
+            const htmlTemplate = `
+                    <div class="row mt-3 animate__animated animate__tada">
+                        <div class="col">
+                            <div class="callout callout-danger" style="position: relative;">
+                                <h1 id="turnoText">${nombres} ${apellidos}</h1>
+                                <h2 class="text-warning">${(turnosList.includes(apellidos)) ? "(Segundo llamado)": ""}</h2>
+                                <h3 class="text-dark">Pase al consultorio.</h3>
+                                <img src="{% static "images/logo.png" %}" height="100" class="logo" alt="Logo">
+                            </div>
+                        </div>
+                    </div>`
+
+            const listaTurnos = document.getElementById('turnosContainer');
+            listaTurnos.insertAdjacentHTML('afterbegin', htmlTemplate);
+
+            // Apply temporary color change
+            const turnoText = document.getElementById('turnoText');
+            turnoText.classList.add('text-danger');
+
+            // Reproducir sonido
+            const notificationSound = document.getElementById('notificationSound');
+            playNotificationSound();
+
+            // Revert to original color after 5 seconds
+            setTimeout(() => {
+                turnoText.classList.remove('text-danger');
+                turnoText.classList.add('text-dark');
+            }, 10000);
+
+            turnosList.push(apellidos);
+        }
+
+
+        // Manejar eventos WebSocket
+        websocket.onmessage = function (event) {
+            const data = JSON.parse(event.data);
+            console.log(data);
+
+            if (data.type === 'turno') {
+                // Agregar el turno a la lista
+                agregarTurno(data);
+            }
+        };
+
+        websocket.onopen = function () {
+            console.log('Conexión WebSocket establecida');
+        };
+
+        websocket.onerror = function (event) {
+            console.error('Error en la conexión WebSocket');
+        };
+
+        websocket.onclose = function (event) {
+            console.log('Conexión WebSocket cerrada');
+        };
+
+        function playNotificationSound() {
+            notificationSound.play().then(function () {
+                console.log("Reproducción de sonido exitosa");
+            }).catch(function (error) {
+                console.error("Error al reproducir sonido:", error);
+            });
+        }
+    </script>
+<script>
+    $(document).ready(function() {
+        // Initialize the Bootstrap Carousel
+        var carouselElement = document.getElementById("mediaCarousel");
+        var carousel = new bootstrap.Carousel(carouselElement, { interval: false });
+
+        // Get the carousel items
+        var carouselItems = carouselElement.querySelectorAll(".carousel-item");
+
+        // Add 'ended' event listener for videos
+        carouselItems.forEach(function(item, index) {
+            var videoElement = item.querySelector("video.d-block");
+            if (videoElement) {
+                videoElement.addEventListener('ended', function() {
+                    carousel.next(); // Move to the next carousel item
+                }, false);
+            }
+        });
+
+        // Set a timeout for images
+        function autoAdvanceImage(index) {
+            setTimeout(function() {
+                if (index < carouselItems.length) {
+                    carousel.to(index); // Move to the next image
+                    autoAdvanceImage(index + 1); // Schedule the next auto-advance for images
+                } else {
+                    carousel.to(0); // Return to the first image
+                    autoAdvanceImage(0); // Restart auto-advance for images
+                }
+            }, 10000); // 10 seconds interval
+        }
+
+        // Start auto-advance for images
+        autoAdvanceImage(0);
+    });
+</script>
+</body>
+
+</html>

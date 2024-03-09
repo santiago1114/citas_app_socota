@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Title{% endblock title %}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static "css/tabler.min.css" %}">
+    {% block styles %}{% endblock styles %}
+</head>
+<body>
+    {% include "layout/header.html" %}
+    {% include "layout/navbar.html" %}
+    <div class="page-wrapper">
+        {% block content %}{% endblock content %}
+    </div>
+    
+    {% block scripts %}{% endblock scripts %}
+    <script src="{% static "js/tabler.min.js" %}"></script>
+</body>
+</html>
