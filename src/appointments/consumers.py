@@ -21,6 +21,8 @@ class TurnoConsumer(WebsocketConsumer):
     def send_turno(self, data):
         self.send(text_data=json.dumps({
             'type': 'turno',
+            'id': data['instance'].id,
+            'enEspera': data['instance'].en_espera,
             'nombres': data['instance'].cita.paciente.nombres,
             'apellidos': data['instance'].cita.paciente.apellidos,
         }))

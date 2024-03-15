@@ -41,6 +41,16 @@ def cerrar_turno(request, id):
     # Save the instance
     instance.save()
     
+    # Enviar evento socket
+    channel_layer = get_channel_layer()
+    async_to_sync(channel_layer.group_send)(
+        'turno_group',  # Group name
+        {
+            'type': 'send_turno',
+            'instance': instance,
+        }
+    )
+     
     # Redirect to a refresh
     return redirect(request.META.get('HTTP_REFERER'))
 
