@@ -23,24 +23,13 @@ class Paciente(models.Model):
     def __str__(self):
         return f"{self.numero_documento}: {self.nombres} {self.apellidos}"
     
-
-class Cita(models.Model):
-    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE)
-    fecha = models.DateTimeField(default=timezone.now)
-    confirmado = models.BooleanField(default=False)
-    asistio = models.BooleanField(default=False, help_text='Esta casilla se marca automaticamente cuando se genera un turno y se cierra')
-    
-    def __str__(self):
-        return f"{self.paciente.numero_documento}: {self.paciente.nombres} {self.paciente.apellidos}"
-
-
 class Turno(models.Model):
-    cita = models.ForeignKey(Cita, on_delete=models.CASCADE)
+    paciente = models.ForeignKey(Paciente, on_delete=models.CASCADE, null=True)
     en_espera = models.BooleanField(default=True)
     fecha_de_apertura = models.DateTimeField(auto_now_add=True, null=True)
     
     def __str__(self):
-        return f"Turno de {self.cita} - {self.en_espera}"
+        return f"Turno de {self.paciente} - {self.en_espera}"
     
     
 class Media(models.Model):

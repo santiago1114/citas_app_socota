@@ -1,5 +1,5 @@
 from django.shortcuts import redirect, get_object_or_404, render
-from .models import Cita, Turno
+from .models import Turno, Paciente
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 from .models import Media
@@ -16,10 +16,7 @@ def carousel_view(request):
 
 def crear_turno(request, id):
     # Retrieve the instance of Cita using the id
-    instance = get_object_or_404(Cita, id=id)
-    
-    # Change the value of the field
-    instance.asistio = True
+    instance = get_object_or_404(Paciente, id=id)
     
     # Save the instance
     instance.save()
@@ -28,7 +25,7 @@ def crear_turno(request, id):
     instance.turno_set.create()
     
     # Redirect to a refresh
-    return redirect(request.META.get('HTTP_REFERER'))
+    return redirect('/admin/appointments/turno/')
 
 
 def cerrar_turno(request, id):
