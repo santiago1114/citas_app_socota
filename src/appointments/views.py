@@ -15,7 +15,7 @@ def carousel_view(request):
 
 
 def crear_turno(request, id):
-    # Retrieve the instance of Cita using the id
+    # Retrieve the instance of Paciente using the id
     instance = get_object_or_404(Paciente, id=id)
     
     # Save the instance

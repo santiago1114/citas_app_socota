@@ -5,7 +5,7 @@ from django.utils.safestring import mark_safe
 
 def crear_turno(instance):
     return f'''
-        <a href="/cita/turno/save/{instance.pk}">Asignar turno</a>
+        <a href="/turno/save/{instance.pk}">Asignar turno</a>
     '''
 
 

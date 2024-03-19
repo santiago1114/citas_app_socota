@@ -19,7 +19,7 @@ from .views import index, cerrar_turno, crear_turno, llamar_turno
 
 urlpatterns = [
     path('turnos/', index, name='turnos-index'),
-    path('cita/turno/save/<int:id>/', crear_turno),
+    path('turno/save/<int:id>/', crear_turno),
     path('turno/close/<int:id>/', cerrar_turno),
     path('turno/call/<int:id>/', llamar_turno)
 ]

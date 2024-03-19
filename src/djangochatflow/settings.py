@@ -200,7 +200,6 @@ JAZZMIN_SETTINGS = {
                                 "auth.Group",
                                 "appointments",
                                 "appointments.Paciente",
-                                "appointments.Cita",
                                 "appointments.Turno",
                                 "appointments.Media",],
 
@@ -216,7 +215,6 @@ JAZZMIN_SETTINGS = {
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
         "auth.Group": "fas fa-users",
-        "appointments.Cita": "far fa-calendar-plus",
         "appointments.Paciente": "far fa-address-book",
         "appointments.Turno": "fas fa-users",
         "appointments.Media": "far fa-folder-open",

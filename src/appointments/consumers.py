@@ -23,6 +23,6 @@ class TurnoConsumer(WebsocketConsumer):
             'type': 'turno',
             'id': data['instance'].id,
             'enEspera': data['instance'].en_espera,
-            'nombres': data['instance'].cita.paciente.nombres,
-            'apellidos': data['instance'].cita.paciente.apellidos,
+            'nombres': data['instance'].paciente.nombres,
+            'apellidos': data['instance'].paciente.apellidos,
         }))
