@@ -78,12 +78,13 @@
             const { nombres, apellidos, enEspera, id } = turno;
 
             if (!enEspera){
-                var elementToRemove = document.getElementById(id);
+                var elementsToRemove = document.querySelectorAll(`[id="${id}"]`);
 
                 // Check if the element exists
-                if (elementToRemove) {
-                    // Remove the element from the DOM
-                    elementToRemove.remove();
+                if (elementsToRemove.length > 0) {
+                    elementsToRemove.forEach(element => {
+                        element.remove();
+                    })
                 } else {
                     console.log("No se encuentra el turno para borrar");
                 }
